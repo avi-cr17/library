@@ -12,7 +12,7 @@ const Form = (props) => {
 
 
     const [values,setValues] = useState(initialValues);
-
+    
     
 
     useEffect(() => {
@@ -47,11 +47,11 @@ const Form = (props) => {
         })
     }
 
-
+    if(props.active)
   return (
-    <div className='order-2 lg:order-1 lg:w-2/6 lg:h-full bg-slate-100 p-5 text-center lg:flex lg:flex-col justify-center items-center ' >
-        
-            <div className='lg:text-4xl font-bold m-5'>Form</div>
+    <div className='order-2 lg:order-1 lg:w-3/6 lg:h-full bg-slate-100 p-5 text-center lg:flex lg:flex-col justify-center items-center ' >
+            <i className="fa fa-3x top-0 left-0 m-5 hover:cursor-pointer fa-bars absolute" aria-hidden="true" onClick={ ()=> {props.setActive(!props.active); setValues(initialValues); props.setCurrentID('')}}></i>
+            <div className='lg:text-4xl font-bold m-5'>{props.currentID === '' ? 'Add' : 'Update'} a book</div>
 
             <form  onSubmit={SubmitHandler} className='lg:w-full lg:h-fit p-5'>
                 
@@ -75,12 +75,19 @@ const Form = (props) => {
                 
                 
   
-                <button type="submit" className="bg-black text-slate-200 border-red-200 border-4 p-3 rounded-xl mt-5">Submit</button>
+                <button type="submit" className="bg-black text-slate-200 border-4 p-3 rounded-xl mt-5">Submit</button>
 
             </form>
             
     </div>
   )
+  if(!props.active){
+      return (
+        <div className='order-2 lg:order-1 lg:w-1/12 lg:h-full bg-slate-100 p-5 text-center lg:flex lg:flex-col justify-center items-center ' >
+        <i className="fa fa-3x top-0 left-0 m-5 hover:cursor-pointer fa-bars absolute" aria-hidden="true" onClick={ ()=> {props.setActive(!props.active)}}></i>    
+        </div>
+      )
+  }
 }
 
 export default Form

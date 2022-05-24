@@ -9,6 +9,7 @@ function App() {
 
   const [bookList,SetbookList]=useState();
   const [currentID,setCurrentID]=useState('');
+  const [active,setActive] = useState(false);
 
   useEffect(()=>{
 
@@ -64,8 +65,8 @@ const deleteHandler = (id)=>{
 
   return (
     <div className=" flex lg:h-screen h-fit w-screen justify-center content-center lg:flex-row flex-col ">
-      <Form  addorEdit={addorEdit} currentID={currentID} bookList={bookList} />
-      <Table  setCurrentID={setCurrentID} deleteHandler={deleteHandler} bookList={bookList}/>
+      <Form  addorEdit={addorEdit} currentID={currentID} bookList={bookList} active={active} setActive={setActive} setCurrentID={setCurrentID}/>
+      <Table  setCurrentID={setCurrentID} deleteHandler={deleteHandler} bookList={bookList} setActive={setActive}/>
     </div>
   );
 }
