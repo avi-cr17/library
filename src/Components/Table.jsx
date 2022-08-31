@@ -4,7 +4,7 @@ import Mobile from './Mobile';
 const Table = (props) => {
 
    const [filter,setFilter] = useState(false);
-   const [list,setList]= useState([]);
+   const [list,setList]= useState();
    var [total,setTotal]= useState(0);
 
    const initialValues = {
@@ -23,6 +23,7 @@ const [values,setValues] = useState(initialValues);
   useEffect(()=>{
     setList(props.bookList);  
     console.log("table component",list)
+    if(props.bookList!=null)
     setTotal(Object.keys(props.bookList).length)
   },[props.bookList,filter])
 
