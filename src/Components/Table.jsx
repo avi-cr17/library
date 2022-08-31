@@ -1,16 +1,19 @@
 import React,{useEffect, useState} from 'react'
+import Mobile from './Mobile';
 
 const Table = (props) => {
 
    const [filter,setFilter] = useState(false);
-   const [list,setList]= useState();
+   const [list,setList]= useState([]);
+   var [total,setTotal]= useState(0);
 
    const initialValues = {
-    Name:'',
-    Published: '',
-    Author:'',
-    Domain:'',
-    
+    Question:'',
+    Time: '',
+    Remarks:'',
+    Topic:'',
+    isAvailable : '',
+    Link : ''
 }
 
 
@@ -20,12 +23,12 @@ const [values,setValues] = useState(initialValues);
   useEffect(()=>{
     setList(props.bookList);  
     console.log("table component",list)
+    setTotal(Object.keys(props.bookList).length)
   },[props.bookList,filter])
 
 
   const handleInputChange = (e) =>{
     var {placeholder,value} = e.target;
-
     const search = {...values, [placeholder] : value};
     var filteredList = [];
 
@@ -36,10 +39,9 @@ const [values,setValues] = useState(initialValues);
     
         Object.keys(props.bookList).filter( (book,i) => {
             //console.log(book)
-            if( (search.Name === '' ||  props.bookList[book].Name.includes(search.Name) ) && 
-            (search.Published === '' ||  props.bookList[book].Published === parseInt(search.Published) )&&
-            (search.Author === '' ||  props.bookList[book].Author.includes(search.Author)  )&&
-            (search.Domain === '' ||  props.bookList[book].Domain.includes(search.Domain)) )
+            if( (search.Question === '' ||  props.bookList[book].Question.toLowerCase().includes(search.Question.toLowerCase()) ) && 
+            (search.Topic === '' ||  props.bookList[book].Topic.toLowerCase().includes(search.Topic.toLowerCase()))  && 
+            (search.isAvailable === 0 ||  props.bookList[book].isAvailable == search.isAvailable ))
             {filteredList.push(book)
             console.log(search.Name  , " ",  filteredList)}
         }
@@ -58,16 +60,17 @@ const [values,setValues] = useState(initialValues);
   }
 
   return (
-    <div className='order-1 lg:order-2 lg:w-full h-fit  text-center p-5  flex flex-col align-center items-center'>
+    <div className='order-1 lg:order-2 lg:w-full h-screen  text-center p-5  flex flex-col align-center items-center overflow-scroll'>
 
+        
+        <div className='text-5xl font-bold mt-3'> {total} questions done</div>
         <button className="bg-black text-slate-200 border-4 p-3 rounded-xl mt-2 mb-5 self-start" onClick={ ()=>{setFilter(!filter)}}>Filter</button>
-
         { filter ? 
         <form className='border-2 border-black lg:h-32 lg:w-full mb-5 flex justify-start items-center' > 
-        <input type="text" className="mt-2 mb-2 lg:w-1/6 border-black lg:border-2 lg:rounded-lg p-3 ml-2" value={values.Name} placeholder="Name" aria-label="Username" onChange={handleInputChange}></input>
-        <input type="text" value={values.Published} className="mt-2 mb-2 lg:w-1/6 lg:ml-2 border-black lg:border-2 lg:rounded-lg p-3" placeholder="Published" onChange={handleInputChange}/>
-        <input type="text" value={values.Author} className="mt-2 mb-2 lg:w-1/6 lg:ml-2 border-black lg:border-2 lg:rounded-lg p-3" placeholder="Author" onChange={handleInputChange}/>
-       <input type="text" value={values.Domain} className="mt-2 mb-2 lg:w-1/6 lg:ml-2 border-black lg:border-2 lg:rounded-lg p-3 lg:mr-5" placeholder="Domain" onChange={handleInputChange}/>
+        <input type="text" className="mt-2 mb-2 lg:w-1/6 border-black lg:border-2 lg:rounded-lg p-3 ml-2" value={values.Question} placeholder="Question" aria-label="Username" onChange={handleInputChange}></input>
+        <input type="text" className="mt-2 mb-2 lg:w-1/6 border-black lg:border-2 lg:rounded-lg p-3 ml-2" value={values.Topic} placeholder="Topic" aria-label="Topic" onChange={handleInputChange}></input>
+        <input className='ml-5 lg:mt-0' type="radio"   value={1} placeholder='isAvailable' onChange={handleInputChange}/>
+        <label className='ml-2' htmlFor={1}>Rivision Left?</label>
        <button className="bg-black text-slate-200 border-4 p-3 rounded-xl lg:w-1/6 lg:ml-5" onClick={ (e)=>{e.preventDefault(); setValues(initialValues); setList(props.bookList)   }}>clear</button>
        {/* <button type="submit" className="bg-black text-slate-200 lg:w-1/6 mr-2 p-3 rounded-xl ">Submit</button> */}
         </form> : 
@@ -75,16 +78,17 @@ const [values,setValues] = useState(initialValues);
             
         </div>}
 
-        <table className='border-seperate   table-auto lg:w-full lg:h-fit'>
-        <thead className='border-4 p-5 border-black bg-black text-white lg:h-12'>
+        <table className='border-separate  overflow-scroll border-2 border-spacing-3 table-auto lg:w-full lg:h-fit'>
+        <thead className='border-4 p-5  bg-black text-white lg:h-12 border'>
                     <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Published</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Dompain </th>
-                    <th scope="col">isAvailable </th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Remarks</th>
+                    <th scope="col">Topic </th>
+                    <th scope="col">Rivision </th>
                     <th scope="col">update</th>
                     <th scope="col">Delete</th>
+                    <th scope="col">Link</th>
                     </tr>
                 </thead>
 
@@ -95,15 +99,15 @@ const [values,setValues] = useState(initialValues);
                 list ? 
                 Object.keys(list).map((book,i)=>(
                     
-                    <tr className='lg:h-12'  key={book}>
-                        <td>{list[book].Name}</td>
-                    <td>{list[book].Published}</td>
-                        <td>{list[book].Author}</td>
-                        <td>{list[book].Domain}</td>
-                        <td>{list[book].isAvailable}</td>
+                    <tr className='lg:h-20 hover:bg-slate-200'  key={book}>
+                        <td className='border border-black '>{list[book].Question}</td>
+                    <td className='border border-black'>{list[book].Time}</td>
+                        <td className='border border-black'>{list[book].Remarks}</td>
+                        <td className='border border-black'>{list[book].Topic}</td>
+                        <td className='border border-black'>{list[book].isAvailable == 1 ? "yes" : "no"}</td>
                         <td onClick={()=>{props.setCurrentID(book); props.setActive(true)}}><i className="fa fa-pencil-square-o  hover:cursor-pointer" aria-hidden="true" ></i></td>
                         <td onClick={()=>props.deleteHandler(book)}><i className="fa fa-times  text-red-600 hover:cursor-pointer" aria-hidden="true "></i></td>
-                        
+                        <td><a href={list[book].Link} target="_blank"><i className="fa fa-external-link  hover:cursor-pointer" aria-hidden="true" ></i></a></td>
                         
                     </tr>
                         )) : <tr></tr>} 
@@ -115,6 +119,7 @@ const [values,setValues] = useState(initialValues);
 
             
         </table>
+       
     </div>
 
     
