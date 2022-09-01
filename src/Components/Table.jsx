@@ -6,13 +6,14 @@ const Table = (props) => {
    const [filter,setFilter] = useState(false);
    const [list,setList]= useState();
    var [total,setTotal]= useState(0);
+   var [rivision,setRivision]= useState(0);
 
    const initialValues = {
     Question:'',
     Time: '',
     Remarks:'',
     Topic:'',
-    isAvailable : '',
+    isAvailable : 0,
     Link : ''
 }
 
@@ -33,16 +34,19 @@ const [values,setValues] = useState(initialValues);
     const search = {...values, [placeholder] : value};
     var filteredList = [];
 
+    if(placeholder == 'isAvailable')
+    setRivision(!rivision)
+
     setValues({...values , 
         [placeholder] : value
     }) 
 
-    
+    console.log(search)
         Object.keys(props.bookList).filter( (book,i) => {
             //console.log(book)
             if( (search.Question === '' ||  props.bookList[book].Question.toLowerCase().includes(search.Question.toLowerCase()) ) && 
             (search.Topic === '' ||  props.bookList[book].Topic.toLowerCase().includes(search.Topic.toLowerCase()))  && 
-            (search.isAvailable === 0 ||  props.bookList[book].isAvailable == search.isAvailable ))
+            (search.isAvailable === 0 ||  props.bookList[book].isAvailable == search.isAvailable))
             {filteredList.push(book)
             console.log(search.Name  , " ",  filteredList)}
         }
@@ -70,9 +74,9 @@ const [values,setValues] = useState(initialValues);
         <form className='border-2 border-black lg:h-32 lg:w-full mb-5 flex justify-start items-center' > 
         <input type="text" className="mt-2 mb-2 lg:w-1/6 border-black lg:border-2 lg:rounded-lg p-3 ml-2" value={values.Question} placeholder="Question" aria-label="Username" onChange={handleInputChange}></input>
         <input type="text" className="mt-2 mb-2 lg:w-1/6 border-black lg:border-2 lg:rounded-lg p-3 ml-2" value={values.Topic} placeholder="Topic" aria-label="Topic" onChange={handleInputChange}></input>
-        <input className='ml-5 lg:mt-0' type="radio"   value={1} placeholder='isAvailable' onChange={handleInputChange}/>
+        <input className='ml-5 lg:mt-0' type="radio"  checked={rivision} value={"1"} placeholder='isAvailable' onChange={handleInputChange}/>
         <label className='ml-2' htmlFor={1}>Rivision Left?</label>
-       <button className="bg-black text-slate-200 border-4 p-3 rounded-xl lg:w-1/6 lg:ml-5" onClick={ (e)=>{e.preventDefault(); setValues(initialValues); setList(props.bookList)   }}>clear</button>
+       <button className="bg-black text-slate-200 border-4 p-3 rounded-xl lg:w-1/6 lg:ml-5" onClick={ (e)=>{e.preventDefault(); setValues(initialValues); setList(props.bookList); setRivision(0)   }}>clear</button>
        {/* <button type="submit" className="bg-black text-slate-200 lg:w-1/6 mr-2 p-3 rounded-xl ">Submit</button> */}
         </form> : 
         <div> 
